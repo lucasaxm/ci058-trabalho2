@@ -39,10 +39,7 @@ def converteArquivo7bits(path)
 	String.new
 	input = File.open(path, "r") do |file|
 		all=file.read;
-		vetor = all.split('')
-	end
-	for i in 0..(vetor.length-1)
-		vetor[i]="%07b" % vetor[i].ord
+		vetor = all.split(' ')
 	end
 	return vetor
 end
@@ -50,9 +47,9 @@ end
 def codificaHamming47(vet4bits)
 	codificado = []
 	str = []
-	dicionario = Hash.new
+	# dicionario = Hash.new
 	for i in 0..(vet4bits.length-1)
-		if dicionario[vet4bits[i]].nil?	
+		# if dicionario[vet4bits[i]].nil?	
 			binarios = []
 			str[3]=vet4bits[i][0]
 			if str[3]=="1"
@@ -75,43 +72,38 @@ def codificaHamming47(vet4bits)
 			str[2] = paridade[1]
 			str[4] = paridade[0]
 			codificado << str.join
-			dicionario[vet4bits[i]]=str.join
-		else
-			codificado << dicionario[vet4bits[i]]
-		end
+			# dicionario[vet4bits[i]]=str.join;
+		# else
+		# 	codificado << dicionario[vet4bits[i]]
+		# end
 	end
+	# puts dicionario
 	return codificado
 end
 
 def decodificaHamming47(vet7bits)
 	vet4bits=[]
-	dicionario=Hash.new
 	vet7bits.each do |str7Bits|
-		if dicionario[str7Bits].nil?
-			str4Bits = String.new
-			binarios=[]
-			for i in 1..7
-				if str7Bits[i-1].to_i==1
-					binarios << "%03b" % i
-				end
+		str4Bits = String.new
+		binarios=[]
+		for i in 1..7
+			if str7Bits[i-1].to_i==1
+				binarios << "%03b" % i
 			end
-			bitErrado = xor3Vetor(binarios).to_i(2)
-			if bitErrado!=0
-				if (str7Bits[bitErrado-1])=="0"
-					str7Bits[bitErrado-1]="1"
-				else
-					str7Bits[bitErrado-1]="0"
-				end
-			end
-			str4Bits[0]=str7Bits[3-1]
-			str4Bits[1]=str7Bits[5-1]
-			str4Bits[2]=str7Bits[6-1]
-			str4Bits[3]=str7Bits[7-1]
-			vet4bits << str4Bits
-			dicionario[str7Bits] = str4Bits
-		else
-			vet4bits << dicionario[str7Bits]
 		end
+		bitErrado = xor3Vetor(binarios).to_i(2)
+		if bitErrado!=0
+			if (str7Bits[bitErrado-1])=="0"
+				str7Bits[bitErrado-1]="1"
+			else
+				str7Bits[bitErrado-1]="0"
+			end
+		end
+		str4Bits[0]=str7Bits[3-1]
+		str4Bits[1]=str7Bits[5-1]
+		str4Bits[2]=str7Bits[6-1]
+		str4Bits[3]=str7Bits[7-1]
+		vet4bits << str4Bits
 	end
 	return vet4bits
 end
@@ -119,7 +111,7 @@ end
 def arrayToFile (array,path)
 	File.open(path, "w") { |file|
 		array.each do |x|
-			file.write (x.to_i(2).chr);
+			file.write (x+" ");
 		end
 	}	
 end
