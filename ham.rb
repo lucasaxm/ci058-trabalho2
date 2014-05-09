@@ -85,14 +85,22 @@ def decodificaHamming47(vet7bits)
 			end
 		end
 		bitErrado = xor3Vetor(binarios).to_i(2)
-		if bitErrado==0
-			str4Bits[0]=str7Bits[3-1]
-			str4Bits[1]=str7Bits[5-1]
-			str4Bits[2]=str7Bits[6-1]
-			str4Bits[3]=str7Bits[7-1]
-		else
-			# corrige
+		if bitErrado!=0
+			# puts "bitErrado: "+bitErrado.to_s
+			# puts "errado: "+str4Bits
+			# puts "errado: "+str4Bits[bitErrado-1].to_s
+			if (str7Bits[bitErrado-1])=="0"
+				str7Bits[bitErrado-1]="1"
+			else
+				str7Bits[bitErrado-1]="0"
+			end
+			# puts "corrigido: "+str4Bits[bitErrado-1].to_s
+			# puts "corrigido: "+str4Bits
 		end
+		str4Bits[0]=str7Bits[3-1]
+		str4Bits[1]=str7Bits[5-1]
+		str4Bits[2]=str7Bits[6-1]
+		str4Bits[3]=str7Bits[7-1]
 		vet4bits << str4Bits
 	end
 	return vet4bits
@@ -125,7 +133,7 @@ def arrayToString (array, c)
 end
 
 def insereErro (vetor)
-	if ARGV.length>5
+	if ARGV.length>7
 		abort "Numero de parametros incorreto"
 	end
 	for i in 2..(ARGV.length-1)
@@ -142,15 +150,15 @@ end
 	vet7bits = []
 	case ARGV[0]
 		when "-c"	
-			vet4bits = converteArquivo4bits("input.in")
+			vet4bits = converteArquivo4bits(ARGV[1])
 			vet7bits = codificaHamming47(vet4bits)
 			insereErro (vet7bits)
-			arrayToFile(vet7bits,"output.ham")
+			arrayToFile(vet7bits,(ARGV[1].split('.').first)+".ham")
 		when "-d"
-			vet7bits = converteArquivo7bits("output.ham")
+			vet7bits = converteArquivo7bits(ARGV[1])
 			vet4bits = decodificaHamming47(vet7bits)
 			outputString = arrayToString(vet4bits,2)
-			stringToFile(outputString,"input.txt")
+			stringToFile(outputString,(ARGV[1].split('.').first)+".out")
 		else
 			abort ("Parametro Incorreto (Use -c ou -d)")
 	end
