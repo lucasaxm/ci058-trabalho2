@@ -9,9 +9,13 @@ def xor3 (a,b)
 end
 
 def xor3Vetor (a)
-	x = a[0]
-	for i in 1..(a.length-1)
-		x=xor3(x,a[i])
+	if !a.empty?
+		x = a[0]
+		for i in 1..(a.length-1)
+			x=xor3(x,a[i])
+		end
+	else
+		x="000"
 	end
 	return x
 end
