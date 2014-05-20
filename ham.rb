@@ -119,7 +119,7 @@ end
 def arrayToFile (array,path)
 	File.open(path, "w") { |file|
 		array.each do |x|
-			file.write (x.to_i(2).chr);
+			file.write (x+" ");
 		end
 	}	
 end
@@ -147,7 +147,7 @@ def insereErro (vetor)
 		abort "Numero de parametros incorreto"
 	end
 	for i in 2..(ARGV.length-1)
-		if vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]==1
+		if vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]=="1"
 			vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]="0"
 		else
 			vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]="1"
