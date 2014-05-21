@@ -152,14 +152,18 @@ end
 
 def insereErro (vetor)
 # => Inverte o valor dos bits indicados por argumento no terminal.
-	if ARGV.length>7
-		abort "Numero de parametros incorreto"
-	end
+	puts "Inserindo erros..."
 	for i in 2..(ARGV.length-1)
-		if vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]=="1"
-			vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]="0"
+		if (ARGV[i].to_i<(vetor.length*7)) && (ARGV[i].to_i>=0)
+			if vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]=="1"
+				vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]="0"
+				puts "[bit "+ARGV[i]+"] - Valor do bit alterado para 0."
+			else
+				vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]="1"
+				puts "[bit "+ARGV[i]+"] - Valor do bit alterado para 1."
+			end
 		else
-			vetor[(ARGV[i].to_i)/7][(ARGV[i].to_i)%7]="1"
+			puts "[bit "+ARGV[i]+"] - Nao existe nesse arquivo (erro nao inserido). [Ultimo bit: "+(vetor.length*7-1).to_s+"]"
 		end
 	end
 end
@@ -167,11 +171,16 @@ end
 #main{
 	vet4bits = []
 	vet7bits = []
+	if ARGV.length>7
+		abort "Numero de parametros incorreto"
+	end
 	case ARGV[0]
 		when "-c"	
 			vet4bits = converteArquivo4bits(ARGV[1])
 			vet7bits = codificaHamming74(vet4bits)
-			insereErro (vet7bits)
+			if ARGV.length>2
+				insereErro (vet7bits)
+			end
 			arrayToFile(vet7bits,(ARGV[1].split('.').first)+".ham")
 		when "-d"
 			vet7bits = converteArquivo7bits(ARGV[1])
