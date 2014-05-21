@@ -120,7 +120,7 @@ end
 def arrayToFile (array,path)
 	File.open(path, "w") { |file|
 		array.each do |x|
-			file.write (x);
+			file.write (x+" ");
 		end
 	}	
 end

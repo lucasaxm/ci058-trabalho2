@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "Limpando..."
+if [[ -d $1 ]]; then
+	rm -fv $1/*.out
+	rm -fv $1/*.ham
+	rm -fv $1/*_erro.*
+else
+	rm -fv *.out
+	rm -fv *.ham
+	rm -fv *_erro.*
+fi

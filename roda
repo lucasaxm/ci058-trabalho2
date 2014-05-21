@@ -1,0 +1,84 @@
+#!/bin/bash
+
+function roda(){
+	if [[ -e $1 ]]; then
+		echo "Codificando..."
+		time ruby ham.rb -c $@
+
+		x=$(echo $1 | cut -d "." -f1)
+		y=$x".ham"
+		z=$x".out"
+		echo "Decodificando..."
+		time ruby ham.rb -d $y
+
+		diff $1 $z
+	else
+		echo "Arquivo de entrada não existe ou não específicado."
+	fi
+}
+
+function bindiff(){
+	cmp -l $1 $2 | 
+	mawk 'function oct2dec(oct,     dec) {
+	          for (i = 1; i <= length(oct); i++) {
+	              dec *= 8;
+	              dec += substr(oct, i, 1)
+	          };
+	          return dec
+	      }
+	      {
+	          printf "%08X %02X %02X\n", $1-1, oct2dec($2), oct2dec($3)
+	      }'
+}
+
+TESTES_DIR="testes/"
+if [[ $1 = "-all" ]]; then
+	if [[ $2 = "-e" ]]; then
+		for i in $(ls $TESTES_DIR | grep txt); do
+			semext=$(echo $i | cut -d "." -f1)
+			comerro=$semext"_erro.txt"
+			cp $TESTES_DIR$i $TESTES_DIR$comerro
+			echo "["$TESTES_DIR$i"]"
+			roda $TESTES_DIR$i
+			echo
+			echo "["$TESTES_DIR$comerro"]"
+			roda $TESTES_DIR$comerro $3 $4 $5 $6 $7
+			echo
+			echo "Diferenca binaria entre arquivos codificados:"
+			bindiff $TESTES_DIR$semext".ham" $TESTES_DIR$semext"_erro.ham"
+			echo
+			echo "---------------------------------------"
+		done
+	else
+		for i in $(ls $TESTES_DIR | grep txt); do
+			echo "["$TESTES_DIR$i"]"
+			roda $TESTES_DIR$i
+			echo
+			echo "---------------------------------------"
+		done
+	fi
+elif [[ -e $TESTES_DIR$1 ]]; then
+	if [[ $2 = "-e" ]]; then
+		semext=$(echo $1 | cut -d "." -f1)
+		comerro=$semext"_erro.txt"
+		cp $TESTES_DIR$1 $TESTES_DIR$comerro
+		echo "["$TESTES_DIR$1"]"
+		roda $TESTES_DIR$1
+		echo
+		echo "["$TESTES_DIR$comerro"]"
+		roda $TESTES_DIR$comerro $3 $4 $5 $6 $7
+		echo
+		echo "Diferenca binaria entre arquivos codificados:"
+		bindiff $TESTES_DIR$semext".ham" $TESTES_DIR$semext"_erro.ham"
+		echo
+		echo "---------------------------------------"
+	else
+		echo "["$TESTES_DIR$1"]"
+		roda $TESTES_DIR$1
+		echo
+		echo "---------------------------------------"
+	fi
+else
+	echo "Sintaxe:"
+	echo "./roda_testes -all | testfile [-e <error_bits>]"
+fi
