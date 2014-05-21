@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 def xor3 (a,b)
+# => xor de 3 bits
 	c=[]
 	for i in 0..2
 		c << (a[i].to_i ^ b[i].to_i).to_s
@@ -9,6 +11,7 @@ def xor3 (a,b)
 end
 
 def xor3Vetor (a)
+# => xor de 3 bits entre os elementos de um vetor
 	if !a.empty?
 		x = a[0]
 		for i in 1..(a.length-1)
@@ -21,6 +24,7 @@ def xor3Vetor (a)
 end
 
 def converteArquivo4bits(path)
+# => Abre um arquivo de texto e retorna um vetor em que cada elemento representa 4 bits dos dados desse arquivo
 	binchars=[]
 	input = File.open(path, "r") do |file|
 		file.each_char do |c|
@@ -35,6 +39,7 @@ def converteArquivo4bits(path)
 end
 
 def converteArquivo7bits(path)
+# => Abre arquivo codificado e retorna um vetor em que cada elemento representa um caractere em binario de 7 bits.
 	vetor=[]
 	String.new
 	input = File.open(path, "r") do |file|
@@ -48,6 +53,7 @@ def converteArquivo7bits(path)
 end
 
 def codificaHamming47(vet4bits)
+# => Aplica Hamming(7,4) transformando um vetor com elementos de 4 bits em um vetor com elementos de 7 bits.
 	codificado = []
 	str = []
 	dicionario = Hash.new
@@ -77,13 +83,14 @@ def codificaHamming47(vet4bits)
 			codificado << str.join
 			dicionario[vet4bits[i]]=str.join
 		else
-			codificado << dicionario[vet4bits[i]]
+			codificado << dicionario[vet4bits[i]]*1
 		end
 	end
 	return codificado
 end
 
 def decodificaHamming47(vet7bits)
+# => Decodifica Hamming(7,4) transformando um vetor com elementos de 7 bits em um vetor com elementos de 4 bits.
 	vet4bits=[]
 	dicionario=Hash.new
 	vet7bits.each do |str7Bits|
@@ -110,39 +117,41 @@ def decodificaHamming47(vet7bits)
 			vet4bits << str4Bits
 			dicionario[str7Bits] = str4Bits
 		else
-			vet4bits << dicionario[str7Bits]
+			vet4bits << dicionario[str7Bits]*1
 		end
 	end
 	return vet4bits
 end
 
 def arrayToFile (array,path)
+# => Converte cada elemento binario do array em um char e o escreve em um arquivo.
 	File.open(path, "w") { |file|
 		array.each do |x|
-			file.write (x+" ");
+			file.write (x.to_i(2).chr);
 		end
 	}	
 end
 
 def stringToFile (str,path)
+# => Escreve a string str em um arquivo.
 	File.open(path, "w") { |file|
 		file.write (str);
 	}	
 end
 
-def arrayToString (array, c)
+def arrayToString (array)
+# => Os elementos binarios do array sao concatenados 2 a 2, convertidos para char, que por sua vez formam uma string.
 	str = String.new
-	i=0
-	j=i+c-1;
+	i=0;
 	while i<(array.length-1)
-		str=str+(array[i..j].join.to_i(2).chr)
-		i=j+1
-		j=i+c-1
+		str<<(array[i..i+1].join.to_i(2).chr)
+		i+=2;
 	end
 	return str
 end
 
 def insereErro (vetor)
+# => Inverte o valor dos bits indicados por argumento no terminal.
 	if ARGV.length>7
 		abort "Numero de parametros incorreto"
 	end
@@ -167,7 +176,7 @@ end
 		when "-d"
 			vet7bits = converteArquivo7bits(ARGV[1])
 			vet4bits = decodificaHamming47(vet7bits)
-			outputString = arrayToString(vet4bits,2)
+			outputString = arrayToString(vet4bits)
 			stringToFile(outputString,(ARGV[1].split('.').first)+".out")
 		else
 			abort ("Parametro Incorreto (Use -c ou -d)")
