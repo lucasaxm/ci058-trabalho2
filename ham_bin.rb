@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 def xor3 (a,b)
+# => xor de 3 bits
 	c=[]
 	for i in 0..2
 		c << (a[i].to_i ^ b[i].to_i).to_s
@@ -9,6 +11,7 @@ def xor3 (a,b)
 end
 
 def xor3Vetor (a)
+# => xor de 3 bits entre os elementos de um vetor
 	if !a.empty?
 		x = a[0]
 		for i in 1..(a.length-1)
@@ -21,6 +24,7 @@ def xor3Vetor (a)
 end
 
 def converteArquivo4bits(path)
+# => Abre um arquivo de texto e retorna um vetor em que cada elemento representa 4 bits dos dados desse arquivo
 	binchars=[]
 	input = File.open(path, "r") do |file|
 		file.each_char do |c|
@@ -129,12 +133,10 @@ end
 
 def arrayToString (array, c)
 	str = String.new
-	i=0
-	j=i+c-1;
+	i=0;
 	while i<(array.length-1)
-		str=str+(array[i..j].join.to_i(2).chr)
-		i=j+1
-		j=i+c-1
+		str<<(array[i..i+1].join.to_i(2).chr)
+		i+=2;
 	end
 	return str
 end

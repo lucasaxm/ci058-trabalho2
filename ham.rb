@@ -89,7 +89,7 @@ def codificaHamming47(vet4bits)
 	return codificado
 end
 
-def decodificaHamming47(vet7bits)
+def decodificaHamming74(vet7bits)
 # => Decodifica Hamming(7,4) transformando um vetor com elementos de 7 bits em um vetor com elementos de 4 bits.
 	vet4bits=[]
 	dicionario=Hash.new
@@ -175,7 +175,7 @@ end
 			arrayToFile(vet7bits,(ARGV[1].split('.').first)+".ham")
 		when "-d"
 			vet7bits = converteArquivo7bits(ARGV[1])
-			vet4bits = decodificaHamming47(vet7bits)
+			vet4bits = decodificaHamming74(vet7bits)
 			outputString = arrayToString(vet4bits)
 			stringToFile(outputString,(ARGV[1].split('.').first)+".out")
 		else
