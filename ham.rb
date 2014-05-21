@@ -52,7 +52,7 @@ def converteArquivo7bits(path)
 	return vetor
 end
 
-def codificaHamming47(vet4bits)
+def codificaHamming74(vet4bits)
 # => Aplica Hamming(7,4) transformando um vetor com elementos de 4 bits em um vetor com elementos de 7 bits.
 	codificado = []
 	str = []
@@ -170,7 +170,7 @@ end
 	case ARGV[0]
 		when "-c"	
 			vet4bits = converteArquivo4bits(ARGV[1])
-			vet7bits = codificaHamming47(vet4bits)
+			vet7bits = codificaHamming74(vet4bits)
 			insereErro (vet7bits)
 			arrayToFile(vet7bits,(ARGV[1].split('.').first)+".ham")
 		when "-d"
